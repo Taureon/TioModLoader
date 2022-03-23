@@ -1,0 +1,7 @@
+{
+    "code": "console.log({TioModLoaderAPI, screenshot: getValue('mainCanvas').toDataUrl()});",
+    "name": "Example Mod",
+    "author": "Taureon",
+    "description": "This is an example mod!",
+    "enabled": true
+}
