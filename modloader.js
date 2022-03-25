@@ -156,20 +156,26 @@ ___modMgrElementDict.modImportConfirm.onclick = () => {
     }
 }
 
-//some final things
+//some attribute setting
 ___modMgrElementDict.menu.hidden = true;
 ___modMgrElementDict.modImportBox.type = 'text';
 ___modMgrElementDict.menuHeader.innerText = 'Territorial.io Mod Loader';
 ___createModList();
 
-//appending a bunch of times and we are done
+//building the ui together
 ___modMgrElementDict.modImport.appendChild(___modMgrElementDict.modImportBox);
 ___modMgrElementDict.modImport.appendChild(___modMgrElementDict.modImportConfirm);
 ___modMgrElementDict.menu.appendChild(___modMgrElementDict.modImport);
 ___modMgrElementDict.menu.appendChild(___modMgrElementDict.modList);
 ___modMgrElementDict.menu.appendChild(___modMgrElementDict.menuHeader);
+
+//make the menu close if the user presses outside of it
+for (child of document.body.children) child.addEventListener("click", () => ___modMgrElementDict.menu.hidden = true);
+
+//last two appendings and we are done
 document.body.appendChild(___modMgrElementDict.toggleMgr);
 document.body.appendChild(___modMgrElementDict.menu);
+
 /*
 #TioModLoader_toggleMgr{border:solid;border-color:#FFFFFF;border-width:3px;color:green;padding:25px 25px;cursor:default;z-index:6;position:fixed;top:20%;right:0.83%}
 #TioModLoader_menu{visibility:hidden;border:3px solid #fff;background-color:#000;opacity:95%;z-index:1;position:fixed;top:25%;left:40%;width:20%;height:40%}
