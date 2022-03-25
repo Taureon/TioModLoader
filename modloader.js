@@ -21,9 +21,9 @@ const variableAliases = {
 },
 TioModLoaderAPI = {
     variableAliases,
-    getValue = (alias) => window[variableAliases[alias]],
-    setValue = (alias, value) => window[variableAliases[alias]] = value,
-    setObjectProperty = (alias, property, value) => window[variableAliases[alias]][property] = value
+    getValue: (alias) => window[variableAliases[alias]],
+    setValue: (alias, value) => window[variableAliases[alias]] = value,
+    setObjectProperty: (alias, property, value) => window[variableAliases[alias]][property] = value
 };
 
 //___mod: {code: String, name: String, author: String, description: String, enabled: Boolean}
@@ -48,19 +48,6 @@ let ___modMgrListElements = [],
     ___styleSheet = document.createElement("style");
 ___styleSheet.innerText = '#TioModLoader_toggleMgr{border:solid;border-color:#FFFFFF;border-width:3px;color:green;padding:25px 25px;cursor:default;z-index:6;position:fixed;top:20%;right:0.83%}#TioModLoader_menu{visibility:hidden;border:3px solid #fff;background-color:#000;opacity:95%;z-index:1;position:fixed;top:25%;left:40%;width:20%;height:40%}#TioModLoader_modList::-webkit-scrollbar{display:none}#TioModLoader_modList{z-index:1;position:absolute;width:100%;top:12%;height:68%;overflow:auto;-ms-overflow-style:none;scrollbar-width:none}#TioModLoader_menuHeader{position:absolute;width:100%;height:10%;color:#fff;background-color:#212121;text-align:center;vertical-align:center;font-size:1.5vw}#TioModLoader_modImport{z-index:1;position:absolute;width:100%;height:20%;bottom:0}#TioModLoader_modImportBox{text-align:center;background-color:rgba(0,0,0,.6);border:0;outline:3px solid white;color:#fff;position:absolute;font:bold 19px Arial;width:70%;height:50%;left:3%;bottom:15%}#TioModLoader_modImportConfirm{position:absolute;right:2.5%;bottom:15%;height:55.5%;width:20%;outline:3px solid #FFFFFF}#TioModLoader_modName{position:relative;margin:auto;width:90%;font-size:1vw;color:#fff;z-index:1;min-height:20%;overflow:hidden}#TioModLoader_modListEntry{position:absolute;top:50%;left:5%;-ms-transform:translateY(-50%);transform:translateY(-50%);margin:auto;width:70%;font-size:1vw;color:#fff;text-align:center;overflow:hidden}#TioModLoader_modToggle{position:absolute;height:70%;right:5%;top:15%;width:12.5%;outline:3px solid white}';
 document.head.appendChild(___styleSheet);
-/*
-#TioModLoader_toggleMgr{border:solid;border-color:#FFFFFF;border-width:3px;color:green;padding:25px 25px;cursor:default;z-index:6;position:fixed;top:20%;right:0.83%}
-#TioModLoader_menu{visibility:hidden;border:3px solid #fff;background-color:#000;opacity:95%;z-index:1;position:fixed;top:25%;left:40%;width:20%;height:40%}
-#TioModLoader_modList::-webkit-scrollbar{display:none}
-#TioModLoader_modList{z-index:1;position:absolute;width:100%;top:12%;height:68%;overflow:auto;-ms-overflow-style:none;scrollbar-width:none}
-#TioModLoader_menuHeader{position:absolute;width:100%;height:10%;color:#fff;background-color:#212121;text-align:center;vertical-align:center;font-size:1.5vw}
-#TioModLoader_modImport{z-index:1;position:absolute;width:100%;height:20%;bottom:0}
-#TioModLoader_modImportBox{text-align:center;background-color:rgba(0,0,0,.6);border:0;outline:3px solid white;color:#fff;position:absolute;font:bold 19px Arial;width:70%;height:50%;left:3%;bottom:15%}
-#TioModLoader_modImportConfirm{position:absolute;right:2.5%;bottom:15%;height:55.5%;width:20%;outline:3px solid #FFFFFF}
-#TioModLoader_modName{position:relative;margin:auto;width:90%;font-size:1vw;color:#fff;z-index:1;min-height:20%;overflow:hidden}
-#TioModLoader_modListEntry{position:absolute;top:50%;left:5%;-ms-transform:translateY(-50%);transform:translateY(-50%);margin:auto;width:70%;font-size:1vw;color:#fff;text-align:center;overflow:hidden}
-#TioModLoader_modToggle{position:absolute;height:70%;right:5%;top:15%;width:12.5%;outline:3px solid white}
-*/
 
 //Gives info about a mod.
 function ___viewModDescription(i) {
@@ -155,7 +142,7 @@ for (elem of ___loadThoseElements) {
 ___modMgrElementDict.toggleMgr.style['background-color'] = ___buttonColors.off;
 ___modMgrElementDict.toggleMgr.onclick = () => {
     ___modMgrElementDict.menu.hidden = !___modMgrElementDict.menu.hidden
-    ___modMgrListElements[i].style['background-color'] = ___modMgrElementDict.menu.hidden ? ___buttonColors.off : ___buttonColors.on;
+    ___modMgrElementDict.toggleMgr.style['background-color'] = ___modMgrElementDict.menu.hidden ? ___buttonColors.off : ___buttonColors.on;
 };
 
 //mod import button
@@ -175,3 +162,16 @@ ___modMgrElementDict.menu.appendChild(___modMgrElementDict.modList);
 ___modMgrElementDict.menu.appendChild(___modMgrElementDict.menuHeader);
 document.body.appendChild(___modMgrElementDict.toggleMgr);
 document.body.appendChild(___modMgrElementDict.menu);
+/*
+#TioModLoader_toggleMgr{border:solid;border-color:#FFFFFF;border-width:3px;color:green;padding:25px 25px;cursor:default;z-index:6;position:fixed;top:20%;right:0.83%}
+#TioModLoader_menu{visibility:hidden;border:3px solid #fff;background-color:#000;opacity:95%;z-index:1;position:fixed;top:25%;left:40%;width:20%;height:40%}
+#TioModLoader_modList::-webkit-scrollbar{display:none}
+#TioModLoader_modList{z-index:1;position:absolute;width:100%;top:12%;height:68%;overflow:auto;-ms-overflow-style:none;scrollbar-width:none}
+#TioModLoader_menuHeader{position:absolute;width:100%;height:10%;color:#fff;background-color:#212121;text-align:center;vertical-align:center;font-size:1.5vw}
+#TioModLoader_modImport{z-index:1;position:absolute;width:100%;height:20%;bottom:0}
+#TioModLoader_modImportBox{text-align:center;background-color:rgba(0,0,0,.6);border:0;outline:3px solid white;color:#fff;position:absolute;font:bold 19px Arial;width:70%;height:50%;left:3%;bottom:15%}
+#TioModLoader_modImportConfirm{position:absolute;right:2.5%;bottom:15%;height:55.5%;width:20%;outline:3px solid #FFFFFF}
+#TioModLoader_modName{position:relative;margin:auto;width:90%;font-size:1vw;color:#fff;z-index:1;min-height:20%;overflow:hidden}
+#TioModLoader_modListEntry{position:absolute;top:50%;left:5%;-ms-transform:translateY(-50%);transform:translateY(-50%);margin:auto;width:70%;font-size:1vw;color:#fff;text-align:center;overflow:hidden}
+#TioModLoader_modToggle{position:absolute;height:70%;right:5%;top:15%;width:12.5%;outline:3px solid white}
+*/
