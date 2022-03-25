@@ -1,64 +1,69 @@
-//this is the file that gets minified and put on the download page
+/*
+CONVENTION:
+
+Every variable in global scope that is used by TioModLoader needs to be prefixed with triple underscores!
+*/
+
 javascript:(async function(){
 
-    let logHeader = '[TioModLoader] Bootloader: ',
-        textDecoder = new TextDecoder();
+    let ___logHeader = '[TioModLoader] Bootloader: ',
+        ___textDecoder = new TextDecoder();
     
     //domain check
-    if (!location.host.endsWith('territorial.io')) return alert(logHeader + 'Error: Invalid Domain');
+    if (!location.host.endsWith('territorial.io')) return alert(___logHeader + 'Error: Invalid Domain');
 
     try {
-        console.log(logHeader + 'Started.');
-        let storedCode = localStorage.getItem('TioModLoader_main');
+        console.log(___logHeader + 'Started.');
+        let ___storedCode = localStorage.getItem('TioModLoader_main');
 
         //fetch a string from the server
-        function stringFetch(path, options) {
+        function ___fetch(path, options) {
             return new Promise((Resolve, Reject) => {
                 fetch('https://example.com/' + path, options)
                 .then(res => res.arrayBuffer())
-                .then(res => Resolve(textDecoder.decode(new Uint8Array(res))))
+                .then(res => Resolve(___textDecoder.decode(new Uint8Array(res))))
                 .catch(Reject)
             });
         }
 
         //updates the main mod loader
-        async function update() {
+        async function ___update() {
 
-            //should return: '{version: 'version', code: 'code'}'
-            storedCode = JSON.parse(await stringFetch('code'));
+            //should return: '{lastUpdateCheck: date, version: 'version', code: 'code'}'
+            ___storedCode = JSON.parse(await ___fetch('code'));
 
-            storedCode.lastUpdateCheck = Date.now();
-            console.log(logHeader + 'Updated. Version: ' + storedCode.version);
+            ___storedCode.lastUpdateCheck = Date.now();
+            console.log(___logHeader + 'Updated. Version: ' + ___storedCode.version);
         }
 
         //if this is the first time that this bookmark has been run
-        if (storedCode) {
-            console.log(logHeader + 'TioModLoader_main not set in LocalStorage, fetching...');
-            await update();
+        if (___storedCode) {
+            console.log(___logHeader + 'TioModLoader_main not set in LocalStorage, fetching...');
+            await ___update();
         } else {
-            storedCode = JSON.parse(storedCode);
+            ___storedCode = JSON.parse(___storedCode);
         }
 
         //check if up to date
-        if (storedCode.lastUpdateCheck + 86400000 < Date.now()) {
+        if (___storedCode.lastUpdateCheck + 86400000 < Date.now()) {
 
             //it has been a day, check if the modloader is up to date
-            if (storedCode.version !== await stringFetch('version')) {
-                console.log(logHeader + 'Version not up to date, updating...');
-                await update();
+            if (___storedCode.version !== await ___fetch('version')) {
+                console.log(___logHeader + 'Version not up to date, updating...');
+                await ___update();
             }
 
             //check version tomorrow
-            storedCode.lastUpdateCheck = Date.now();
-            localStorage.setItem('TioModLoader_main', JSON.stringify(storedCode));
+            ___storedCode.lastUpdateCheck = Date.now();
+            localStorage.setItem('TioModLoader_main', JSON.stringify(___storedCode));
         }
 
         //we are done, time to run the main thing
-        console.log(logHeader + 'Everything done, starting TioModLoader...');
-        eval(storedCode.code);
+        console.log(___logHeader + 'Everything done, starting TioModLoader...');
+        eval(___storedCode.code);
 
     //if an error happened, make an alert about it
     } catch (err) {
-        alert(logHeader + 'Error: ' + err.message);
+        alert(___logHeader + 'Error: ' + err.message);
     }
 })();
