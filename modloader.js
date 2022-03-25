@@ -46,7 +46,7 @@ let ___modMgrListElements = [],
     ___modMgrElementDict = {},
     ___buttonColors = {on: '#A9564A', off: '#0E5B0E'},
     ___styleSheet = document.createElement("style");
-___styleSheet.innerText = '#TioModLoader_toggleMgr{border:solid;border-color:#FFFFFF;border-width:3px;color:green;padding:25px 25px;cursor:default;z-index:6;position:fixed;top:20%;right:0.83%}#TioModLoader_menu{visibility:hidden;border:3px solid #fff;background-color:#000;opacity:95%;z-index:1;position:fixed;top:25%;left:40%;width:20%;height:40%}#TioModLoader_modList::-webkit-scrollbar{display:none}#TioModLoader_modList{z-index:1;position:absolute;width:100%;top:12%;height:68%;overflow:auto;-ms-overflow-style:none;scrollbar-width:none}#TioModLoader_menuHeader{position:absolute;width:100%;height:10%;color:#fff;background-color:#212121;text-align:center;vertical-align:center;font-size:1.5vw}#TioModLoader_modImport{z-index:1;position:absolute;width:100%;height:20%;bottom:0}#TioModLoader_modImportBox{text-align:center;background-color:rgba(0,0,0,.6);border:0;outline:3px solid white;color:#fff;position:absolute;font:bold 19px Arial;width:70%;height:50%;left:3%;bottom:15%}#TioModLoader_modImportConfirm{position:absolute;right:2.5%;bottom:15%;height:55.5%;width:20%;outline:3px solid #FFFFFF}#TioModLoader_modName{position:relative;margin:auto;width:90%;font-size:1vw;color:#fff;z-index:1;min-height:20%;overflow:hidden}#TioModLoader_modListEntry{position:absolute;top:50%;left:5%;-ms-transform:translateY(-50%);transform:translateY(-50%);margin:auto;width:70%;font-size:1vw;color:#fff;text-align:center;overflow:hidden}#TioModLoader_modToggle{position:absolute;height:70%;right:5%;top:15%;width:12.5%;outline:3px solid white}';
+___styleSheet.innerText = '#TioModLoader_toggleMgr{border:solid;border-color:#FFFFFF;border-width:3px;color:green;padding:25px 25px;cursor:default;z-index:6;position:fixed;top:20%;right:0.83%}#TioModLoader_menu{border:3px solid #fff;background-color:#000;opacity:95%;z-index:1;position:fixed;top:25%;left:40%;width:20%;height:40%}#TioModLoader_modList::-webkit-scrollbar{display:none}#TioModLoader_modList{z-index:1;position:absolute;width:100%;top:12%;height:68%;overflow:auto;-ms-overflow-style:none;scrollbar-width:none}#TioModLoader_menuHeader{position:absolute;width:100%;height:10%;color:#fff;background-color:#212121;text-align:center;vertical-align:center;font-size:1.5vw}#TioModLoader_modImport{z-index:1;position:absolute;width:100%;height:20%;bottom:0}#TioModLoader_modImportBox{text-align:center;background-color:rgba(0,0,0,.6);border:0;outline:3px solid white;color:#fff;position:absolute;font:bold 19px Arial;width:70%;height:50%;left:3%;bottom:15%}#TioModLoader_modImportConfirm{position:absolute;right:2.5%;bottom:15%;height:55.5%;width:20%;outline:3px solid #FFFFFF}#TioModLoader_modName{position:relative;margin:auto;width:90%;font-size:1vw;color:#fff;z-index:1;min-height:20%;overflow:hidden}#TioModLoader_modListEntry{position:absolute;top:50%;left:5%;-ms-transform:translateY(-50%);transform:translateY(-50%);margin:auto;width:70%;font-size:1vw;color:#fff;text-align:center;overflow:hidden}#TioModLoader_modToggle{position:absolute;height:70%;right:5%;top:15%;width:12.5%;outline:3px solid white}';
 document.head.appendChild(___styleSheet);
 
 //Gives info about a mod.
@@ -55,7 +55,7 @@ function ___viewModDescription(i) {
 }
 
 function ___saveMods() {
-    localStorage.setItem('TioModLoader_mods', JSON.parse(___mods));
+    localStorage.setItem('TioModLoader_mods', JSON.stringify(___mods));
 }
 
 //Toggles a mod, requires restart.
@@ -147,14 +147,19 @@ ___modMgrElementDict.toggleMgr.onclick = () => {
 
 //mod import button
 ___modMgrElementDict.modImportConfirm.onclick = () => {
-    ___mods.push(JSON.parse(___modMgrElementDict.modImportBox.value));
-    ___createModList();
-    ___saveMods()
+    try {
+        ___mods.push(JSON.parse(___modMgrElementDict.modImportBox.value));
+        ___createModList();
+        ___saveMods();
+    } catch (err) {}
 }
 
 //some final things
 ___modMgrElementDict.menu.hidden = true;
 ___modMgrElementDict.modImportBox.type = 'text';
+___modMgrElementDict.menuHeader.innerText = 'Territorial.io Mod Loader';
+
+//appending a bunch of times and we are done
 ___modMgrElementDict.modImport.appendChild(___modMgrElementDict.modImportBox);
 ___modMgrElementDict.modImport.appendChild(___modMgrElementDict.modImportConfirm);
 ___modMgrElementDict.menu.appendChild(___modMgrElementDict.modImport);
