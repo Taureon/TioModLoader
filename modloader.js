@@ -151,13 +151,16 @@ ___modMgrElementDict.modImportConfirm.onclick = () => {
         ___mods.push(JSON.parse(___modMgrElementDict.modImportBox.value));
         ___createModList();
         ___saveMods();
-    } catch (err) {}
+    } catch (err) {
+        ___modMgrElementDict.modImportBox.value = 'Not a valid mod file!';
+    }
 }
 
 //some final things
 ___modMgrElementDict.menu.hidden = true;
 ___modMgrElementDict.modImportBox.type = 'text';
 ___modMgrElementDict.menuHeader.innerText = 'Territorial.io Mod Loader';
+___createModList();
 
 //appending a bunch of times and we are done
 ___modMgrElementDict.modImport.appendChild(___modMgrElementDict.modImportBox);
