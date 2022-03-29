@@ -2,6 +2,7 @@
 Territorial.io Mod Loader
 
 TODO:
+* Documentation
 * Fix mod toggle buttons
 * Add more UI to modloader.js (mod description, modloader info)
 * Expand TioModLoader API
