@@ -6,3 +6,4 @@ TODO:
 * Expand TioModLoader API
 * Add some Example Mods
 * Controls and pressing T to open the menu
+* Make the Menu window draggable and scaleable
