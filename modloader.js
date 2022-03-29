@@ -78,7 +78,9 @@ const getVar = (alias) => window[variableAliases[alias]],
         winTDM: (clan) => ci.wy(clan),
         //players = array[number 0-511]
         //target = number 0-511
-        askAttack: (players, target) => ci.wz(players, target)
+        askAttack: (players, target) => ci.wz(players, target),
+        sendEmoji: (emoji, player) => dL.a2B(emoji, player),
+        showEmoji: (emoji) => dL.a2A(emoji)
     },
     misc = {
         mouseClick: (x, y) => q6(Math.floor(x), Math.floor(y))
@@ -126,20 +128,8 @@ setInterval(___proxifyVariables, 1000);
     END: TioModLoader API
 */
 
-//___mod: {code: String, name: String, author: String, description: String, enabled: Boolean}
-for (___mod of ___mods) {
-    if (!___mod.enabled) continue;
-    console.log(___logHeader + 'Loading mod: ' + ___mod.name);
-    try {
-        eval('(async function(){' + ___mod.code + '})()');
-    } catch (err) {
-        console.log(___logHeader + `Mod Error [${___mod.name}]: ` + err.message);
-    }
-}
-
 /*
-    Everything past this point:
-    Load the Mod Manager UI.
+    START: Load the Mod Manager UI.
 */
 
 //Prepares an array and dictionary used for later and injects a style sheet.
@@ -148,7 +138,7 @@ let ___modMgrListElements = [],
     ___buttonColors = {off: '#A9564A', on: '#0E5B0E'},
     ___styleSheet = document.createElement("style");
 //This CSS Styleshit is the mother of all jank.
-___styleSheet.innerText = '#TioModLoader_toggleMgr{border:solid;border-color:#FFFFFF;border-width:3px;color:green;padding:25px 25px;cursor:default;z-index:6;position:fixed;top:20%;right:0.83%}#TioModLoader_menu{border:3px solid #fff;background-color:#000;opacity:95%;z-index:1;position:fixed;top:25%;left:40%;width:20%;height:40%}#TioModLoader_modList::-webkit-scrollbar{display:none}#TioModLoader_modList{z-index:1;position:absolute;width:100%;top:12%;height:68%;overflow:auto;-ms-overflow-style:none;scrollbar-width:none}#TioModLoader_menuHeader{position:absolute;width:100%;height:10%;color:#fff;background-color:#212121;text-align:center;vertical-align:center;font-size:1.5vw}#TioModLoader_modImport{z-index:1;position:absolute;width:100%;height:20%;bottom:0}#TioModLoader_modImportBox{text-align:left;background-color:rgba(0,0,0,.6);border:0;outline:3px solid white;color:#fff;position:absolute;font:bold 19px Arial;width:70%;height:50%;left:3%;bottom:15%}#TioModLoader_modImportConfirm{position:absolute;right:3%;bottom:15%;height:50%;width:20%;outline:3px solid #FFFFFF}#TioModLoader_modName{position:relative;margin:auto;width:90%;font-size:1vw;color:#fff;z-index:1;min-height:20%;overflow:hidden}#TioModLoader_modListEntry{left:5%;margin:auto;width:70%;font-size:1vw;color:#fff;text-align:center;overflow:hidden}#TioModLoader_modToggle{position:absolute;height:70%;right:5%;top:15%;width:12.5%;outline:3px solid white}';
+___styleSheet.innerText = '#TioModLoader_toggleMgr{border:solid;border-color:#FFFFFF;border-width:3px;color:green;padding:25px 25px;cursor:default;z-index:1000;position:absolute;top:20%;right:0.83%}#TioModLoader_menu{border:3px solid #fff;background-color:#000;opacity:95%;z-index:1;position:fixed;top:25%;left:40%;width:20%;height:40%}#TioModLoader_modList::-webkit-scrollbar{display:none}#TioModLoader_modList{z-index:1;position:absolute;width:100%;top:12%;height:68%;overflow:auto;-ms-overflow-style:none;scrollbar-width:none}#TioModLoader_menuHeader{position:absolute;width:100%;height:10%;color:#fff;background-color:#212121;text-align:center;vertical-align:center;font-size:1.5vw;font-family:sans-serif}#TioModLoader_modImport{z-index:1;position:absolute;width:100%;height:20%;bottom:0}#TioModLoader_modImportBox{text-align:left;background-color:rgba(0,0,0,.6);border:0;outline:3px solid white;color:#fff;position:absolute;font:bold 19px Arial;width:70%;height:50%;left:3%;bottom:15%}#TioModLoader_modImportConfirm{position:absolute;right:3%;bottom:15%;height:50%;width:20%;outline:3px solid #FFFFFF}#TioModLoader_modName{position:relative;margin:auto;width:90%;text-align:center;font-size:1vw;font-family:sans-serif;color:#fff}#TioModLoader_modListEntry{padding-top:10px;padding-left:10px;font-size:1vw;color:#fff}#TioModLoader_modToggle{height:30px;width:30px;outline:3px solid white}';
 document.head.appendChild(___styleSheet);
 
 //Gives info about a mod.
@@ -184,9 +174,9 @@ function ___createModList() {
     for (modIndex in ___mods) {
         let entry = document.createElement('div'),
             button = document.createElement('div'),
-            text = document.createElement('p');
+            text = document.createElement('div');
 
-        button.onclick = () => ___toggleMod(modIndex);
+        button.onclick = new Function(`___toggleMod(${modIndex})`); //This is dumb.
         button.style['background-color'] = ___mods[modIndex].enabled ? ___buttonColors.on : ___buttonColors.off;
         text.innerText = ___mods[modIndex].name;
 
@@ -194,8 +184,8 @@ function ___createModList() {
         button.id = 'TioModLoader_modToggle';
         text.id = 'TioModLoader_modName';
 
-        entry.appendChild(button);
         entry.appendChild(text);
+        entry.appendChild(button);
 
         ___modMgrListElements.push({
             entry: entry,
@@ -206,6 +196,11 @@ function ___createModList() {
 
     //Show the list in the mod menu.
     for (entry of ___modMgrListElements) ___modMgrElementDict.modList.appendChild(entry.entry);
+}
+
+function ___toggleMenu() {
+    ___modMgrElementDict.menu.hidden = !___modMgrElementDict.menu.hidden
+    ___modMgrElementDict.toggleMgr.style['background-color'] = ___modMgrElementDict.menu.hidden ? ___buttonColors.off : ___buttonColors.on;
 }
 
 //Add the mod menu elements to the element dictionary.
@@ -225,10 +220,7 @@ for (elem of ___loadThoseElements) {
 
 //Manager toggle button.
 ___modMgrElementDict.toggleMgr.style['background-color'] = ___buttonColors.off;
-___modMgrElementDict.toggleMgr.onclick = () => {
-    ___modMgrElementDict.menu.hidden = !___modMgrElementDict.menu.hidden
-    ___modMgrElementDict.toggleMgr.style['background-color'] = ___modMgrElementDict.menu.hidden ? ___buttonColors.off : ___buttonColors.on;
-};
+___modMgrElementDict.toggleMgr.onclick = ___toggleMenu;
 
 //Mod import button.
 ___modMgrElementDict.modImportConfirm.style['background-color'] = ___buttonColors.on;
@@ -253,18 +245,48 @@ ___modMgrElementDict.menuHeader.innerText = 'Territorial.io Mod Loader';
 ___createModList();
 
 //Building the ui together.
-___modMgrElementDict.modImport.appendChild(___modMgrElementDict.modImportBox);
 ___modMgrElementDict.modImport.appendChild(___modMgrElementDict.modImportConfirm);
-___modMgrElementDict.menu.appendChild(___modMgrElementDict.modImport);
-___modMgrElementDict.menu.appendChild(___modMgrElementDict.modList);
+___modMgrElementDict.modImport.appendChild(___modMgrElementDict.modImportBox);
 ___modMgrElementDict.menu.appendChild(___modMgrElementDict.menuHeader);
+___modMgrElementDict.menu.appendChild(___modMgrElementDict.modList);
+___modMgrElementDict.menu.appendChild(___modMgrElementDict.modImport);
 
 //Make the menu close if the user presses outside of it.
 for (child of document.body.children) child.addEventListener("click", () => ___modMgrElementDict.menu.hidden = true);
 
 //Last two appendings and we are done.
-document.body.appendChild(___modMgrElementDict.toggleMgr);
 document.body.appendChild(___modMgrElementDict.menu);
+document.body.appendChild(___modMgrElementDict.toggleMgr);
 
 //Add the suffix to indicate that the mod loader has worked.
 TioModLoaderAPI.setVar('gameVersion', TioModLoaderAPI.getVar('gameVersion') + '   Modded');
+
+//Draggable Mod Menu Window.
+//By undefined#9617, modified and optimized to fit this code.
+___modMgrElementDict.menu.onmousedown = function(e) {
+
+    let shiftX = e.pageX - ___modMgrElementDict.menu.getBoundingClientRect().left - pageXOffset;
+    let shiftY = e.pageY - ___modMgrElementDict.menu.getBoundingClientRect().top - pageYOffset;
+
+    document.onmousemove = function(e) {
+        ___modMgrElementDict.menu.style.left = e.pageX - shiftX + 'px';
+        ___modMgrElementDict.menu.style.top = e.pageY - shiftY + 'px';
+    };
+}
+___modMgrElementDict.menu.onmouseup = () => document.onmousemove = null;
+___modMgrElementDict.menu.ondragstart = () => false;
+
+/*
+    END: Load the Mod Manager UI.
+*/
+
+//___mod: {code: String, name: String, author: String, description: String, enabled: Boolean}
+for (___mod of ___mods) {
+    if (!___mod.enabled) continue;
+    console.log(___logHeader + 'Loading mod: ' + ___mod.name);
+    try {
+        eval('(async function(){' + ___mod.code + '})()');
+    } catch (err) {
+        console.log(___logHeader + `Mod Error [${___mod.name}]: ` + err.message);
+    }
+}
